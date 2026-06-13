@@ -37,12 +37,14 @@ A comprehensive Islamic companion web application featuring the Holy Quran, pray
 ## Getting Started
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/abdulai1sow/MyMuslimApp.git
 cd MyMuslimApp
 ```
 
 2. Open in a local server:
+
 ```bash
 python3 -m http.server 8000
 ```
@@ -65,11 +67,13 @@ quranApp/
 ## Features Details
 
 ### Home Page
+
 - Welcome message
 - Feature cards for Prayer Times, Quran, and Duas
 - Quick navigation to all sections
 
 ### Prayer Times Page
+
 - Location search input
 - Current prayer highlighted (Active badge)
 - Next prayer highlighted (Next badge)
@@ -77,6 +81,7 @@ quranApp/
 - Responsive layout
 
 ### Quran Reader
+
 - Surah selector with all 114 chapters
 - Translation selector with 4 options
 - Display mode toggle (Arabic only / With Translation)
@@ -84,12 +89,14 @@ quranApp/
 - Verse-by-verse display with translations
 
 ### Duas Section
+
 - 8 category buttons (3 rows on desktop, responsive on mobile)
 - Beautiful card-based layout
 - Arabic with harakat + English translations
 - Dynamic category switching
 
 ### Mobile Navigation
+
 - Hamburger menu for mobile devices
 - Smooth animations
 - Automatic menu close on link click

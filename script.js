@@ -21,15 +21,23 @@ async function fetchJSON(url, options = {}) {
   } catch (error) {
     // Use Netlify Function proxy for hosted versions
     if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-      console.log('📡 Using Netlify proxy for:', url);
+      console.log('📡 Direct fetch failed, using Netlify proxy for:', url);
       try {
         const proxyUrl = `/.netlify/functions/proxy-api?url=${encodeURIComponent(url)}`;
+        console.log('Calling proxy endpoint:', proxyUrl);
         const response = await fetch(proxyUrl);
-        if (!response.ok) throw new Error('Netlify proxy failed');
-        return response.json();
+        
+        if (!response.ok) {
+          console.error('Netlify proxy returned status:', response.status);
+          throw new Error(`Netlify proxy failed with status ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('✅ Netlify proxy successful for:', url);
+        return data;
       } catch (e) {
-        console.error('Netlify proxy failed:', e);
-        throw error;
+        console.error('❌ Netlify proxy error:', e);
+        throw e;
       }
     }
     throw error;

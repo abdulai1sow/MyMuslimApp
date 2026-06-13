@@ -148,10 +148,10 @@ function setActiveNav() {
 async function searchLocation(locationName) {
   try {
     console.log(`🔍 Searching for location: ${locationName}`);
-    
+
     // Add delay to respect Nominatim rate limiting
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     const response = await fetch(
       `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationName)}&format=json&limit=1`,
       {
@@ -160,11 +160,11 @@ async function searchLocation(locationName) {
         }
       }
     );
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
 
     if (data && data.length > 0) {
@@ -236,11 +236,11 @@ async function fetchPrayerTimes() {
     const response = await fetch(
       `https://api.aladhan.com/v1/timings/${formattedDate}?latitude=${currentLat}&longitude=${currentLng}&method=2`
     );
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
 
     if (data.code === 200) {
@@ -305,11 +305,11 @@ function displayPrayerTimes(timings) {
 async function fetchSurahs() {
   try {
     const response = await fetch('https://api.alquran.cloud/v1/surah');
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
 
     if (data.code === 200 && data.data) {
@@ -468,7 +468,7 @@ function setupBurgerMenu() {
 // Check API connectivity
 async function checkAPIStatus() {
   console.log('🔍 Checking API connectivity...');
-  
+
   try {
     // Check Aladhan API
     try {
@@ -477,7 +477,7 @@ async function checkAPIStatus() {
     } catch (e) {
       console.log('📿 Aladhan API: ❌ Offline');
     }
-    
+
     // Check Al-Quran Cloud API
     try {
       const quranResponse = await fetch('https://api.alquran.cloud/v1/surah/1');
@@ -485,7 +485,7 @@ async function checkAPIStatus() {
     } catch (e) {
       console.log('📖 Al-Quran Cloud API: ❌ Offline');
     }
-    
+
     // Check Nominatim API with proper header
     try {
       const nominatimResponse = await fetch('https://nominatim.openstreetmap.org/search?q=New York&format=json&limit=1', {
@@ -591,13 +591,13 @@ function displayDuas(prayer, duasData = duasCollection) {
 document.addEventListener('DOMContentLoaded', () => {
   console.log('🚀 My Muslim App loaded');
   checkAPIStatus();
-  
+
   setActiveNav();
   setupBurgerMenu();
-  
+
   // Check which page we're on and load appropriate content
   const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-  
+
   if (currentPage === 'prayer-times.html') {
     setupLocationSearch();
     fetchPrayerTimes();

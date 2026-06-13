@@ -22,12 +22,11 @@ async function fetchJSON(url, options = {}) {
     // Try CORS proxy as fallback for hosted versions
     if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
       console.log('📡 Using CORS proxy for:', url);
-      const corsProxy = 'https://api.allorigins.win/get?url=';
+      const corsProxy = 'https://cors-anywhere.herokuapp.com/';
       try {
-        const response = await fetch(corsProxy + encodeURIComponent(url));
+        const response = await fetch(corsProxy + url);
         if (!response.ok) throw new Error('CORS proxy failed');
-        const data = await response.json();
-        return JSON.parse(data.contents);
+        return response.json();
       } catch (e) {
         console.error('CORS proxy also failed:', e);
         throw error;

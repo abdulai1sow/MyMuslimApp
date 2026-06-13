@@ -219,16 +219,23 @@ async function fetchPrayerTimes() {
     const response = await fetch(
       `https://api.aladhan.com/v1/timings/${formattedDate}?latitude=${currentLat}&longitude=${currentLng}&method=2`
     );
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
     const data = await response.json();
 
     if (data.code === 200) {
       displayPrayerTimes(data.data.timings);
+    } else {
+      throw new Error('Invalid API response');
     }
   } catch (error) {
     console.error('Error fetching prayer times:', error);
     const container = document.getElementById('prayerTimes');
     if (container) {
-      container.innerHTML = '<div class="loading" style="color: red;">Error loading prayer times</div>';
+      container.innerHTML = '<div class="loading" style="color: red;">⚠️ Error loading prayer times. Please check your connection and try again.</div>';
     }
   }
 }
@@ -281,6 +288,11 @@ function displayPrayerTimes(timings) {
 async function fetchSurahs() {
   try {
     const response = await fetch('https://api.alquran.cloud/v1/surah');
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
     const data = await response.json();
 
     if (data.code === 200 && data.data) {
@@ -290,12 +302,18 @@ async function fetchSurahs() {
       if (allSurahs.length > 0) {
         loadSurah(allSurahs[0].number);
       }
+    } else {
+      throw new Error('Invalid API response format');
     }
   } catch (error) {
     console.error('Error fetching surahs:', error);
     const select = document.getElementById('surahSelect');
     if (select) {
-      select.innerHTML = '<option value="">Error loading chapters</option>';
+      select.innerHTML = '<option value="">⚠️ Error loading chapters. Please refresh the page.</option>';
+    }
+    const quranContent = document.getElementById('quranContent');
+    if (quranContent) {
+      quranContent.innerHTML = '<div class="loading" style="color: red;">⚠️ Error loading Quran data. Please check your connection and try again.</div>';
     }
   }
 }
@@ -361,19 +379,23 @@ async function loadSurah(surahNumber) {
       fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/${selectedTranslation}`)
     ]);
 
+    if (!arabicResponse.ok || !englishResponse.ok) {
+      throw new Error(`HTTP error! Arabic: ${arabicResponse.status}, English: ${englishResponse.status}`);
+    }
+
     const arabicData = await arabicResponse.json();
     const englishData = await englishResponse.json();
 
     if (arabicData.code === 200 && englishData.code === 200) {
       displaySurah(arabicData.data, englishData.data);
     } else {
-      throw new Error('Failed to fetch surah data');
+      throw new Error('Invalid API response data');
     }
   } catch (error) {
     console.error('Error fetching surah:', error);
     const quranContent = document.getElementById('quranContent');
     if (quranContent) {
-      quranContent.innerHTML = '<div class="loading" style="color: red;">Error loading surah. Please try again.</div>';
+      quranContent.innerHTML = '<div class="loading" style="color: red;">⚠️ Error loading surah. Please check your connection and try again.</div>';
     }
   }
 }
@@ -426,25 +448,26 @@ function setupBurgerMenu() {
   }
 }
 
-// Initialize the app
-document.addEventListener('DOMContentLoaded', () => {
-  setActiveNav();
-  setupBurgerMenu();
-
-  // Check which page we're on and load appropriate content
-  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-
-  if (currentPage === 'prayer-times.html') {
-    setupLocationSearch();
-    fetchPrayerTimes();
-  } else if (currentPage === 'quran.html') {
-    fetchSurahs();
-  } else if (currentPage === 'duas.html') {
-    setupDuasPage();
+// Check API connectivity
+async function checkAPIStatus() {
+  console.log('🔍 Checking API connectivity...');
+  
+  try {
+    // Check Aladhan API
+    const aladhanResponse = await fetch('https://api.aladhan.com/v1/calendar/2024/6', { method: 'HEAD' }).catch(() => null);
+    console.log(`📿 Aladhan API: ${aladhanResponse ? '✅ Online' : '❌ Offline'}`);
+    
+    // Check Al-Quran Cloud API
+    const quranResponse = await fetch('https://api.alquran.cloud/v1/surah/1', { method: 'HEAD' }).catch(() => null);
+    console.log(`📖 Al-Quran Cloud API: ${quranResponse ? '✅ Online' : '❌ Offline'}`);
+    
+    // Check Nominatim API
+    const nominatimResponse = await fetch('https://nominatim.openstreetmap.org/status.php', { method: 'HEAD' }).catch(() => null);
+    console.log(`🗺️ Nominatim API: ${nominatimResponse ? '✅ Online' : '❌ Offline'}`);
+  } catch (error) {
+    console.error('Error checking API status:', error);
   }
-});
-
-// Fetch Duas from API with fallback to local collection
+}
 async function fetchDuasFromAPI() {
   try {
     // Try fetching from Islamic-api.com
@@ -530,3 +553,24 @@ function displayDuas(prayer, duasData = duasCollection) {
 
   duasContainer.innerHTML = html;
 }
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('🚀 My Muslim App loaded');
+  checkAPIStatus();
+  
+  setActiveNav();
+  setupBurgerMenu();
+  
+  // Check which page we're on and load appropriate content
+  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  
+  if (currentPage === 'prayer-times.html') {
+    setupLocationSearch();
+    fetchPrayerTimes();
+  } else if (currentPage === 'quran.html') {
+    fetchSurahs();
+  } else if (currentPage === 'duas.html') {
+    setupDuasPage();
+  }
+});

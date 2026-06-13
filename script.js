@@ -147,9 +147,24 @@ function setActiveNav() {
 // Search location using Nominatim (free geocoding service)
 async function searchLocation(locationName) {
   try {
+    console.log(`🔍 Searching for location: ${locationName}`);
+    
+    // Add delay to respect Nominatim rate limiting
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
     const response = await fetch(
-      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationName)}&format=json&limit=1`
+      `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationName)}&format=json&limit=1`,
+      {
+        headers: {
+          'User-Agent': 'MyMuslimApp (https://github.com/abdulai1sow/MyMuslimApp)'
+        }
+      }
     );
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
     const data = await response.json();
 
     if (data && data.length > 0) {
@@ -158,16 +173,18 @@ async function searchLocation(locationName) {
       currentLng = parseFloat(result.lon);
       currentLocationName = result.display_name;
 
+      console.log(`✅ Location found: ${currentLocationName}`);
       updateLocationDisplay();
       fetchPrayerTimes();
       return true;
     } else {
+      console.warn('⚠️ Location not found:', locationName);
       alert('Location not found. Please try another search.');
       return false;
     }
   } catch (error) {
-    console.error('Error searching location:', error);
-    alert('Error searching location. Please try again.');
+    console.error('❌ Error searching location:', error);
+    alert('Error searching location. Please check your connection and try again.');
     return false;
   }
 }
@@ -454,16 +471,32 @@ async function checkAPIStatus() {
   
   try {
     // Check Aladhan API
-    const aladhanResponse = await fetch('https://api.aladhan.com/v1/calendar/2024/6', { method: 'HEAD' }).catch(() => null);
-    console.log(`📿 Aladhan API: ${aladhanResponse ? '✅ Online' : '❌ Offline'}`);
+    try {
+      const aladhanResponse = await fetch('https://api.aladhan.com/v1/calendar/2024/6?latitude=31&longitude=-93');
+      console.log(`📿 Aladhan API: ${aladhanResponse.ok ? '✅ Online' : '⚠️ Error: ' + aladhanResponse.status}`);
+    } catch (e) {
+      console.log('📿 Aladhan API: ❌ Offline');
+    }
     
     // Check Al-Quran Cloud API
-    const quranResponse = await fetch('https://api.alquran.cloud/v1/surah/1', { method: 'HEAD' }).catch(() => null);
-    console.log(`📖 Al-Quran Cloud API: ${quranResponse ? '✅ Online' : '❌ Offline'}`);
+    try {
+      const quranResponse = await fetch('https://api.alquran.cloud/v1/surah/1');
+      console.log(`📖 Al-Quran Cloud API: ${quranResponse.ok ? '✅ Online' : '⚠️ Error: ' + quranResponse.status}`);
+    } catch (e) {
+      console.log('📖 Al-Quran Cloud API: ❌ Offline');
+    }
     
-    // Check Nominatim API
-    const nominatimResponse = await fetch('https://nominatim.openstreetmap.org/status.php', { method: 'HEAD' }).catch(() => null);
-    console.log(`🗺️ Nominatim API: ${nominatimResponse ? '✅ Online' : '❌ Offline'}`);
+    // Check Nominatim API with proper header
+    try {
+      const nominatimResponse = await fetch('https://nominatim.openstreetmap.org/search?q=New York&format=json&limit=1', {
+        headers: {
+          'User-Agent': 'MyMuslimApp (https://github.com/abdulai1sow/MyMuslimApp)'
+        }
+      });
+      console.log(`🗺️ Nominatim API: ${nominatimResponse.ok ? '✅ Online' : '⚠️ Error: ' + nominatimResponse.status}`);
+    } catch (e) {
+      console.log('🗺️ Nominatim API: ❌ Offline');
+    }
   } catch (error) {
     console.error('Error checking API status:', error);
   }

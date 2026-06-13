@@ -3,6 +3,40 @@ let selectedTranslation = 'en.sahih';
 let displayMode = 'with-translation';
 let allSurahs = [];
 
+// Fetch with CORS fallback for hosted versions
+async function fetchJSON(url, options = {}) {
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers: {
+        'User-Agent': 'MyMuslimApp (https://github.com/abdulai1sow/MyMuslimApp)',
+        ...options.headers
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  } catch (error) {
+    // Try CORS proxy as fallback for hosted versions
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      console.log('📡 Using CORS proxy for:', url);
+      const corsProxy = 'https://api.allorigins.win/get?url=';
+      try {
+        const response = await fetch(corsProxy + encodeURIComponent(url));
+        if (!response.ok) throw new Error('CORS proxy failed');
+        const data = await response.json();
+        return JSON.parse(data.contents);
+      } catch (e) {
+        console.error('CORS proxy also failed:', e);
+        throw error;
+      }
+    }
+    throw error;
+  }
+}
+
 // Translation options
 const translationOptions = {
   'en.sahih': 'Sahih International',
@@ -152,7 +186,7 @@ async function searchLocation(locationName) {
     // Add delay to respect Nominatim rate limiting
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    const response = await fetch(
+    const data = await fetchJSON(
       `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationName)}&format=json&limit=1`,
       {
         headers: {
@@ -160,12 +194,6 @@ async function searchLocation(locationName) {
         }
       }
     );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
 
     if (data && data.length > 0) {
       const result = data[0];
@@ -188,7 +216,6 @@ async function searchLocation(locationName) {
     return false;
   }
 }
-
 function updateLocationDisplay() {
   const locationDisplay = document.getElementById('currentLocation');
   if (locationDisplay) {
@@ -233,15 +260,9 @@ async function fetchPrayerTimes() {
     const year = today.getFullYear();
     const formattedDate = `${date}-${month}-${year}`;
 
-    const response = await fetch(
+    const data = await fetchJSON(
       `https://api.aladhan.com/v1/timings/${formattedDate}?latitude=${currentLat}&longitude=${currentLng}&method=2`
     );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
 
     if (data.code === 200) {
       displayPrayerTimes(data.data.timings);
@@ -304,13 +325,7 @@ function displayPrayerTimes(timings) {
 // Fetch all Surahs from Al-Quran Cloud API
 async function fetchSurahs() {
   try {
-    const response = await fetch('https://api.alquran.cloud/v1/surah');
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
+    const data = await fetchJSON('https://api.alquran.cloud/v1/surah');
 
     if (data.code === 200 && data.data) {
       allSurahs = data.data;
@@ -326,11 +341,11 @@ async function fetchSurahs() {
     console.error('Error fetching surahs:', error);
     const select = document.getElementById('surahSelect');
     if (select) {
-      select.innerHTML = '<option value="">⚠️ Error loading chapters. Please refresh the page.</option>';
+      select.innerHTML = '<option value="">⚠️ Error loading chapters</option>';
     }
     const quranContent = document.getElementById('quranContent');
     if (quranContent) {
-      quranContent.innerHTML = '<div class="loading" style="color: red;">⚠️ Error loading Quran data. Please check your connection and try again.</div>';
+      quranContent.innerHTML = '<div class="loading" style="color: red;">⚠️ Error loading Quran. Please refresh.</div>';
     }
   }
 }
@@ -391,17 +406,10 @@ function setupTranslationSelector() {
 async function loadSurah(surahNumber) {
   try {
     // Fetch Arabic Naskh script and selected English translation in parallel
-    const [arabicResponse, englishResponse] = await Promise.all([
-      fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/ar.quran-uthmani`),
-      fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}/${selectedTranslation}`)
+    const [arabicData, englishData] = await Promise.all([
+      fetchJSON(`https://api.alquran.cloud/v1/surah/${surahNumber}/ar.quran-uthmani`),
+      fetchJSON(`https://api.alquran.cloud/v1/surah/${surahNumber}/${selectedTranslation}`)
     ]);
-
-    if (!arabicResponse.ok || !englishResponse.ok) {
-      throw new Error(`HTTP error! Arabic: ${arabicResponse.status}, English: ${englishResponse.status}`);
-    }
-
-    const arabicData = await arabicResponse.json();
-    const englishData = await englishResponse.json();
 
     if (arabicData.code === 200 && englishData.code === 200) {
       displaySurah(arabicData.data, englishData.data);

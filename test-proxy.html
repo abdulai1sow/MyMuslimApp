@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netlify Proxy Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    .test-section {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Netlify Proxy Test</h1>
+  
+  <div class="test-section">
+    <h2>Test Quran API (Surah 1)</h2>
+    <button onclick="testQuranAPI()">Test Quran API</button>
+    <pre id="quran-result">Click button to test...</pre>
+  </div>
+
+  <div class="test-section">
+    <h2>Test Prayer Times API</h2>
+    <button onclick="testPrayerAPI()">Test Prayer Times</button>
+    <pre id="prayer-result">Click button to test...</pre>
+  </div>
+
+  <div class="test-section">
+    <h2>Test Location API</h2>
+    <button onclick="testLocationAPI()">Test Location Search</button>
+    <pre id="location-result">Click button to test...</pre>
+  </div>
+
+  <script>
+    async function testQuranAPI() {
+      const result = document.getElementById('quran-result');
+      result.textContent = 'Testing...';
+      try {
+        const url = '/.netlify/functions/proxy-api?url=' + encodeURIComponent('https://api.alquran.cloud/v1/surah/1');
+        const response = await fetch(url);
+        const data = await response.json();
+        result.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        result.textContent = 'Error: ' + error.message;
+      }
+    }
+
+    async function testPrayerAPI() {
+      const result = document.getElementById('prayer-result');
+      result.textContent = 'Testing...';
+      try {
+        const today = new Date();
+        const date = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const year = today.getFullYear();
+        const formattedDate = `${date}-${month}-${year}`;
+        const url = `/.netlify/functions/proxy-api?url=${encodeURIComponent(`https://api.aladhan.com/v1/timings/${formattedDate}?latitude=30.21&longitude=-92.44&method=2`)}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        result.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        result.textContent = 'Error: ' + error.message;
+      }
+    }
+
+    async function testLocationAPI() {
+      const result = document.getElementById('location-result');
+      result.textContent = 'Testing...';
+      try {
+        const url = `/.netlify/functions/proxy-api?url=${encodeURIComponent('https://nominatim.openstreetmap.org/search?q=Leesville&format=json&limit=1')}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        result.textContent = JSON.stringify(data, null, 2);
+      } catch (error) {
+        result.textContent = 'Error: ' + error.message;
+      }
+    }
+  </script>
+</body>
+</html>

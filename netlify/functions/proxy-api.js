@@ -1,57 +1,57 @@
 exports.handler = async (event) => {
-  const url = decodeURIComponent(event.queryStringParameters.url || '');
+  const url = decodeURIComponent(event.queryStringParameters?.url || '');
   
+  console.log('Proxy handler called with URL:', url);
+
   if (!url) {
     return {
       statusCode: 400,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ error: 'URL parameter is required' })
     };
   }
 
-  console.log('Proxy request for:', url);
-
   try {
+    console.log('Fetching from:', url);
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'MyMuslimApp (https://github.com/abdulai1sow/MyMuslimApp)',
-        'Accept': 'application/json'
+        'User-Agent': 'MyMuslimApp/1.0'
       }
     });
 
+    console.log('Response status:', response.status);
+
     if (!response.ok) {
-      console.error(`API returned status ${response.status}`);
       return {
         statusCode: response.status,
-        body: JSON.stringify({ error: `API error: ${response.status}` })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ error: `API returned ${response.status}` })
       };
     }
 
-    const contentType = response.headers.get('content-type');
-    let data;
-
-    if (contentType && contentType.includes('application/json')) {
-      data = await response.json();
-    } else {
-      data = await response.text();
-    }
+    const data = await response.json();
+    console.log('Success! Returning data');
 
     return {
       statusCode: 200,
-      body: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
-      }
+        'Access-Control-Allow-Origin': '*',
+        'Cache-Control': 'no-cache'
+      },
+      body: JSON.stringify(data)
     };
   } catch (error) {
-    console.error('Proxy error:', error);
+    console.error('Proxy error:', error.message, error.stack);
     return {
       statusCode: 500,
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
-        error: 'Failed to fetch data',
-        details: error.message 
+        error: 'Proxy failed',
+        message: error.message
       })
     };
   }
 };
+
 

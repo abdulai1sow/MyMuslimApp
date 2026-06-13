@@ -3,7 +3,7 @@ let selectedTranslation = 'en.sahih';
 let displayMode = 'with-translation';
 let allSurahs = [];
 
-// Fetch with CORS fallback for hosted versions
+// Fetch with Netlify Function proxy for hosted versions
 async function fetchJSON(url, options = {}) {
   try {
     const response = await fetch(url, {
@@ -19,25 +19,17 @@ async function fetchJSON(url, options = {}) {
     }
     return response.json();
   } catch (error) {
-    // Try CORS proxy as fallback for hosted versions
+    // Use Netlify Function proxy for hosted versions
     if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-      console.log('📡 Using CORS proxy for:', url);
-      const corsProxy = 'https://thingproxy.freeboard.io/fetch/';
+      console.log('📡 Using Netlify proxy for:', url);
       try {
-        const response = await fetch(corsProxy + url);
-        if (!response.ok) throw new Error('CORS proxy failed');
+        const proxyUrl = `/.netlify/functions/proxy-api?url=${encodeURIComponent(url)}`;
+        const response = await fetch(proxyUrl);
+        if (!response.ok) throw new Error('Netlify proxy failed');
         return response.json();
       } catch (e) {
-        console.error('First CORS proxy failed, trying second proxy:', e);
-        try {
-          const corsProxy2 = 'https://api.codetabs.com/v1/proxy?quest=';
-          const response = await fetch(corsProxy2 + encodeURIComponent(url));
-          if (!response.ok) throw new Error('Second CORS proxy failed');
-          return response.json();
-        } catch (e2) {
-          console.error('All CORS proxies failed:', e2);
-          throw error;
-        }
+        console.error('Netlify proxy failed:', e);
+        throw error;
       }
     }
     throw error;

@@ -22,14 +22,22 @@ async function fetchJSON(url, options = {}) {
     // Try CORS proxy as fallback for hosted versions
     if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
       console.log('📡 Using CORS proxy for:', url);
-      const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+      const corsProxy = 'https://thingproxy.freeboard.io/fetch/';
       try {
         const response = await fetch(corsProxy + url);
         if (!response.ok) throw new Error('CORS proxy failed');
         return response.json();
       } catch (e) {
-        console.error('CORS proxy also failed:', e);
-        throw error;
+        console.error('First CORS proxy failed, trying second proxy:', e);
+        try {
+          const corsProxy2 = 'https://api.codetabs.com/v1/proxy?quest=';
+          const response = await fetch(corsProxy2 + encodeURIComponent(url));
+          if (!response.ok) throw new Error('Second CORS proxy failed');
+          return response.json();
+        } catch (e2) {
+          console.error('All CORS proxies failed:', e2);
+          throw error;
+        }
       }
     }
     throw error;

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quran - My Muslim App</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <h1>🌙 My Muslim App</h1>
+        <p>Quran & Prayer Times</p>
+      </header>
+
+      <!-- Navigation -->
+      <nav class="navbar">
+        <button class="burger-menu" id="burgerMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <ul class="nav-list" id="navList">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="prayer-times.html">Prayer Times</a></li>
+          <li><a href="quran.html" class="active">Quran</a></li>
+          <li><a href="duas.html">Duas</a></li>
+        </ul>
+      </nav>
+
+      <!-- Quran Section -->
+      <section class="quran-section">
+        <h2>📖 Holy Quran</h2>
+
+        <div class="controls">
+          <div class="search-group">
+            <label for="displayMode">Display Mode:</label>
+            <select id="displayMode">
+              <option value="arabic-only">Arabic Only</option>
+              <option value="with-translation" selected>
+                Arabic + Translation
+              </option>
+            </select>
+          </div>
+          <div class="search-group">
+            <label for="surahSelect">Select Surah (Chapter):</label>
+            <select id="surahSelect">
+              <option value="">Loading chapters...</option>
+            </select>
+          </div>
+          <div class="search-group">
+            <label for="translationSelect">Select Translation:</label>
+            <select id="translationSelect">
+              <option value="">Loading translations...</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="quran-content" id="quranContent">
+          <div class="loading">Loading Quran...</div>
+        </div>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

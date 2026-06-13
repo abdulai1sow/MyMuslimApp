@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prayer Times - My Muslim App</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <h1>🌙 My Muslim App</h1>
+        <p>Quran & Prayer Times</p>
+      </header>
+
+      <!-- Navigation -->
+      <nav class="navbar">
+        <button class="burger-menu" id="burgerMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <ul class="nav-list" id="navList">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="prayer-times.html" class="active">Prayer Times</a></li>
+          <li><a href="quran.html">Quran</a></li>
+          <li><a href="duas.html">Duas</a></li>
+        </ul>
+      </nav>
+
+      <!-- Prayer Times Section -->
+      <section class="prayer-times-section">
+        <h2>⏰ Prayer Times</h2>
+
+        <!-- Location Search -->
+        <div class="location-search">
+          <input
+            type="text"
+            id="locationInput"
+            placeholder="Enter city name (e.g., New York, Chicago, Los Angeles)"
+            class="location-input"
+          />
+          <button id="searchBtn" class="search-button">Search Location</button>
+          <div id="currentLocation" class="current-location">
+            📍 Loading location...
+          </div>
+        </div>
+
+        <div class="prayer-times-container" id="prayerTimes">
+          <div class="loading">Loading prayer times...</div>
+        </div>
+      </section>
+
+      <!-- Information Section -->
+      <section class="info-section">
+        <h3>About Prayer Times</h3>
+        <p>Prayer times are calculated based on the selected location.</p>
+        <div class="prayer-info-cards">
+          <div class="prayer-info-card">
+            <h4>Fajr (Dawn)</h4>
+            <p>The first prayer of the day before sunrise</p>
+          </div>
+          <div class="prayer-info-card">
+            <h4>Dhuhr (Noon)</h4>
+            <p>Prayer at midday when the sun passes the meridian</p>
+          </div>
+          <div class="prayer-info-card">
+            <h4>Asr (Afternoon)</h4>
+            <p>Prayer in the afternoon</p>
+          </div>
+          <div class="prayer-info-card">
+            <h4>Maghrib (Sunset)</h4>
+            <p>Prayer at sunset</p>
+          </div>
+          <div class="prayer-info-card">
+            <h4>Isha (Night)</h4>
+            <p>Prayer in the night</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Duas - My Muslim App</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <h1>🌙 My Muslim App</h1>
+        <p>Quran & Prayer Times</p>
+      </header>
+
+      <!-- Navigation -->
+      <nav class="navbar">
+        <button class="burger-menu" id="burgerMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <ul class="nav-list" id="navList">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="prayer-times.html">Prayer Times</a></li>
+          <li><a href="quran.html">Quran</a></li>
+          <li><a href="duas.html" class="active">Duas</a></li>
+        </ul>
+      </nav>
+
+      <!-- Duas Section -->
+      <section class="duas-section">
+        <h2>📿 Islamic Duas</h2>
+
+        <div class="duas-selector">
+          <div class="category-buttons">
+            <button class="category-btn active" data-category="prayers">
+              Prayers
+            </button>
+            <button class="category-btn" data-category="praising">
+              Praising Allah
+            </button>
+            <button class="category-btn" data-category="travel">Travel</button>
+            <button class="category-btn" data-category="morning_evening">
+              Morning & Evening
+            </button>
+            <button class="category-btn" data-category="food_drink">
+              Food & Drink
+            </button>
+            <button class="category-btn" data-category="home_family">
+              Home & Family
+            </button>
+            <button class="category-btn" data-category="joy_etiquette">
+              Joy & Etiquette
+            </button>
+            <button class="category-btn" data-category="sickness_death">
+              Sickness & Death
+            </button>
+          </div>
+        </div>
+
+        <div class="duas-container" id="duasContainer">
+          <div class="loading">Loading duas...</div>
+        </div>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

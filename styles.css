@@ -1,0 +1,650 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  color: #333;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* Navigation Bar */
+.navbar {
+  background: #1e3a8a;
+  padding: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.burger-menu {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 15px 20px;
+  gap: 6px;
+}
+
+.burger-menu span {
+  width: 25px;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.burger-menu.active span:nth-child(1) {
+  transform: rotate(45deg) translate(10px, 10px);
+}
+
+.burger-menu.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.burger-menu.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -7px);
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar li {
+  margin: 0;
+}
+
+.navbar a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  padding: 15px 30px;
+  transition: background 0.3s;
+  border-bottom: 3px solid transparent;
+  font-weight: 500;
+}
+
+.navbar a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.navbar a.active {
+  background: #3b82f6;
+  border-bottom: 3px solid #fbbf24;
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    justify-content: space-between;
+  }
+
+  .burger-menu {
+    display: flex;
+  }
+
+  .nav-list {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #1e3a8a;
+    width: 100%;
+    z-index: 1000;
+  }
+
+  .nav-list.active {
+    display: flex;
+  }
+
+  .navbar a {
+    padding: 12px 20px;
+    border-bottom: none;
+    border-left: 3px solid transparent;
+  }
+
+  .navbar a.active {
+    border-left: 3px solid #fbbf24;
+    border-bottom: none;
+  }
+}
+
+/* Home Section */
+.home-section {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.welcome-card {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);
+  color: white;
+  padding: 40px 20px;
+  border-radius: 10px;
+  margin-bottom: 40px;
+}
+
+.welcome-card h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.welcome-card p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.feature-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.feature-card {
+  background: white;
+  padding: 30px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.feature-card h3 {
+  color: #1e3a8a;
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.feature-card p {
+  color: #64748b;
+  margin-bottom: 20px;
+}
+
+.btn {
+  display: inline-block;
+  background: #3b82f6;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s;
+  font-weight: 600;
+}
+
+.btn:hover {
+  background: #2563eb;
+}
+
+/* Prayer Times Section */
+.prayer-times-section {
+  padding: 30px 20px;
+  background: #f8fafc;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.prayer-times-section h2 {
+  color: #1e3a8a;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+}
+
+/* Location Search */
+.location-search {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.location-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 12px 15px;
+  border: 2px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.location-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.search-button {
+  padding: 12px 25px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.search-button:hover {
+  background: #2563eb;
+}
+
+.search-button:active {
+  background: #1d4ed8;
+}
+
+.current-location {
+  font-size: 0.95rem;
+  color: #475569;
+  font-style: italic;
+  width: 100%;
+}
+
+.prayer-times-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.prayer-time {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #3b82f6;
+  transition: transform 0.2s;
+  position: relative;
+}
+
+.prayer-time:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.prayer-current {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-left: 4px solid #f59e0b;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.prayer-next {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  border-left: 4px solid #0284c7;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
+}
+
+.prayer-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #0284c7;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.prayer-badge.current-badge {
+  background: #f59e0b;
+}
+
+.prayer-name {
+  font-weight: 700;
+  color: #1e3a8a;
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.prayer-time-text {
+  font-size: 1.3rem;
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* Info Section */
+.info-section {
+  padding: 40px 20px;
+  background: #f8fafc;
+}
+
+.info-section h3 {
+  color: #1e3a8a;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+}
+
+.info-section p {
+  color: #475569;
+  margin-bottom: 30px;
+}
+
+.prayer-info-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.prayer-info-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #3b82f6;
+}
+
+.prayer-info-card h4 {
+  color: #1e3a8a;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.prayer-info-card p {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Quran Section */
+.quran-section {
+  padding: 30px 20px;
+}
+
+.quran-section h2 {
+  color: #1e3a8a;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+/* Controls */
+.controls {
+  margin-bottom: 30px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.search-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.search-group label {
+  font-weight: 600;
+  color: #1e3a8a;
+  text-align: left;
+}
+
+.search-group select {
+  padding: 10px 15px;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.search-group select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Quran Content */
+.quran-content {
+  background: #f0f9ff;
+  padding: 25px;
+  border-radius: 10px;
+  line-height: 2.2;
+  font-size: 1.3rem;
+  text-align: right;
+  direction: rtl;
+  max-height: 600px;
+  overflow-y: auto;
+  border: 2px solid #bfdbfe;
+}
+
+.surah-info {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #3b82f6;
+}
+
+.surah-name {
+  font-weight: 700;
+  color: #1e3a8a;
+  font-size: 1.2rem;
+}
+
+.surah-verses {
+  color: #64748b;
+  margin-top: 5px;
+  font-size: 0.95rem;
+}
+
+.verse {
+  margin-bottom: 15px;
+  padding: 10px;
+  background: white;
+  border-radius: 5px;
+  border-right: 3px solid #3b82f6;
+  transition: background 0.2s;
+}
+
+.verse:hover {
+  background: #f0f9ff;
+}
+
+.verse-text {
+  font-size: 1.4rem;
+  color: #1e3a8a;
+  line-height: 2;
+  margin-bottom: 8px;
+}
+
+.verse-translation {
+  font-size: 1rem;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: white;
+  border-radius: 4px;
+  border-left: 3px solid #60a5fa;
+  font-style: italic;
+}
+
+.verse-number {
+  color: #3b82f6;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Scrollbar Styling */
+.quran-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.quran-content::-webkit-scrollbar-track {
+  background: #e2e8f0;
+  border-radius: 10px;
+}
+
+.quran-content::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border-radius: 10px;
+}
+
+.quran-content::-webkit-scrollbar-thumb:hover {
+  background: #2563eb;
+}
+
+/* Duas Section */
+.duas-section {
+  padding: 30px 20px;
+}
+
+.duas-section h2 {
+  color: #1e3a8a;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+.duas-selector {
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.category-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.category-btn {
+  padding: 12px 16px;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: white;
+  color: #1e3a8a;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.category-btn:hover {
+  border-color: #3b82f6;
+  background: #f0f9ff;
+}
+
+.category-btn.active {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  color: white;
+  border-color: #1e3a8a;
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+}
+
+.duas-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.dua-card {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  padding: 25px;
+  border-radius: 10px;
+  border-left: 4px solid #0284c7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+
+.dua-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dua-title {
+  font-weight: 700;
+  color: #1e3a8a;
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #0284c7;
+}
+
+.dua-arabic {
+  font-size: 1.3rem;
+  color: #1e3a8a;
+  text-align: right;
+  direction: rtl;
+  line-height: 2;
+  margin-bottom: 15px;
+  padding: 15px;
+  background: white;
+  border-radius: 6px;
+  font-family: Arial, sans-serif;
+}
+
+.dua-english {
+  font-size: 0.95rem;
+  color: #475569;
+  font-style: italic;
+  line-height: 1.6;
+  text-align: left;
+  direction: ltr;
+  padding: 10px 0;
+}
